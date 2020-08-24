@@ -1,0 +1,37 @@
+body {
+  background-color: white;
+}
+
+header {
+  text-align: center;
+}
+
+.gameContainer {
+  text-align: center;
+}
+
+.button {
+  background-color: palevioletred;
+  color: black;
+}
+
+#cardimage {
+  height: 300px;
+  width: 300px;
+}
+
+#end_game {
+  animation: endGameAnimation 1s infinite linear;
+}
+
+@keyframes endGameAnimation {
+  0% {
+    color: black;
+  }
+  50% {
+    color: red;
+  }
+  100% {
+    color: black;
+  }
+}
