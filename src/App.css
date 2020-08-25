@@ -1,5 +1,6 @@
 body {
-  background-color: white;
+  background: green;
+  font-family: "Russo One", sans-serif;
 }
 
 header {
@@ -11,8 +12,46 @@ header {
 }
 
 .button {
-  background-color: palevioletred;
-  color: black;
+  background-color: white;
+  color: red;
+  border-radius: 8px;
+  font-size: 25px;
+
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.button:hover {
+  background-color: red;
+  color: white;
+}
+
+.input {
+  height: 20px;
+  width: 350px;
+  border: white 2px solid;
+}
+
+.cardImg {
+  height: 150px;
+  width: 150px;
+}
+
+.scoreboard {
+  font-size: 20px;
+  border: black 2px solid;
+  margin-left: 15px;
+}
+
+#score1 {
+  padding-left: 10px;
+}
+
+#higher {
+  margin-right: 20px;
+  margin-top: 20px;
 }
 
 #cardimage {

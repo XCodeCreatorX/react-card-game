@@ -1,5 +1,5 @@
 import React from "react";
-
+import HigherOrLower from "./game_mechanics";
 class GameContainer extends React.Component {
   state = {
     currentDeckID: "",
@@ -7,8 +7,27 @@ class GameContainer extends React.Component {
     nextCard: {},
     isCard: false,
     score: 0,
-    gameEnd: false,
     lives: 3,
+    userName: "",
+    clicked: false,
+    scoreBoard: [],
+  };
+
+  handleChange = (changeEvent) => {
+    const userName = changeEvent.target.value;
+    this.setState((currentState) => {
+      currentState.userName = userName;
+      return currentState;
+    });
+  };
+
+  inputUserName = (event) => {
+    console.dir(this.state.userName);
+    this.setState((currentState) => {
+      currentState.clicked = true;
+      return currentState;
+    });
+    event.preventDefault();
   };
 
   getDeck = () => {
@@ -27,6 +46,7 @@ class GameContainer extends React.Component {
       .then((response) => response.json())
       .then((data) => data.cards[0]);
   };
+
   drawCard = () => {
     this.deck().then((currentCard) => {
       this.setState({ currentCard: currentCard, isCard: true });
@@ -93,53 +113,122 @@ class GameContainer extends React.Component {
       });
   };
 
+  playAgain = () => {
+    this.getDeck();
+
+    this.setState((currentState) => {
+      const results = {
+        userName: currentState.userName,
+        score: currentState.score,
+      };
+
+      return {
+        clicked: false,
+        scoreBoard: [...currentState.scoreBoard, results],
+        score: 0,
+        lives: 3,
+      };
+    });
+  };
+
   componentDidMount() {
     console.log("mounted");
     this.getDeck();
   }
+
   render() {
     return (
-      <div className="gameContainer">
-        {this.state.isCard && (
-          <img
-            id="cardimage"
-            src={this.state.currentCard.image}
-            alt={this.currentCard}
-          />
-        )}
+      <main className="gameContainer">
+        {this.state.clicked && (
+          <div className="cardGame">
+            <img
+              id="cardimage"
+              src={this.state.currentCard.image}
+              alt={this.currentCard}
+            />
 
-        <br />
-        <br />
-        {this.state.lives > 0 && (
-          <div className="game">
-            <div className="gameMechanics">
-              <button
-                onClick={this.drawCard}
-                id="drawButton"
-                className="button"
-              >
-                Draw Card
-              </button>
-              <div className="buttonContainer">
-                <button
-                  onClick={this.userSelect}
-                  id="higher"
-                  className="button"
-                >
-                  Higher
-                </button>
-                <button onClick={this.userSelect} className="button">
-                  Lower
+            <br />
+            <br />
+            {this.state.lives > 0 && (
+              <div className="game">
+                <div className="gameMechanics">
+                  <button
+                    onClick={this.drawCard}
+                    id="drawButton"
+                    className="button"
+                  >
+                    Draw Card
+                  </button>
+                  <div className="buttonContainer">
+                    <button
+                      onClick={this.userSelect}
+                      id="higher"
+                      className="button"
+                    >
+                      Higher
+                    </button>
+                    <button onClick={this.userSelect} className="button">
+                      Lower
+                    </button>
+                  </div>
+                  <table className="scoreboard">
+                    <tbody>
+                      <th id="username">Username</th>
+                      <th id="score1">Score</th>
+                    </tbody>
+                    {this.state.scoreBoard.map((user) => {
+                      return (
+                        <tbody>
+                          <td>{user.userName}</td>
+                          <td>{user.score}</td>
+                        </tbody>
+                      );
+                    })}
+                  </table>
+                  <h2 id="lives">Current Lives: {this.state.lives}</h2>
+                  <h2 id="score">Score: {this.state.score}</h2>
+                </div>
+              </div>
+            )}
+            {this.state.lives === 0 && (
+              <div className="gameOver">
+                <h2>
+                  {this.state.userName}, you lost with {this.state.score}{" "}
+                  points.
+                </h2>
+                <h2 id="end_game">Game Over!</h2>
+                <button className="button" onClick={this.playAgain}>
+                  Play Again?
                 </button>
               </div>
-
-              <h2 id="lives">Current Lives: {this.state.lives}</h2>
-              <h2 id="score">Score: {this.state.score}</h2>
-            </div>
+            )}
           </div>
         )}
-        {this.state.lives === 0 && <h2 id="end_game">Game Over!</h2>}
-      </div>
+
+        {!this.state.clicked && (
+          <div className="userInput">
+            <img
+              src="http://www.pngmart.com/files/8/Cards-PNG-Transparent-Image.png"
+              alt="Card Image"
+              className="cardImg"
+            />
+            <form action="">
+              <h3>Enter your username below:</h3>
+              <input
+                onChange={this.handleChange}
+                type="text"
+                className="input"
+              />
+              <br />
+              <br />
+
+              <button onClick={this.inputUserName} className="button">
+                Submit
+              </button>
+            </form>
+          </div>
+        )}
+      </main>
     );
   }
 }
